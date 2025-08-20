@@ -17,7 +17,7 @@ This project showcases how to integrate Salesforce with Node.js code running in 
 
 ## Local Development and Testing
 
-This section covers setting up a local development environment to test the quote generation API before deploying to production. You'll create a Salesforce scratch org, start a local Node.js server, and test the API using the provided tools. This allows you to develop and debug locally while maintaining the same Salesforce context and authentication that will be used in production. Note that Heroku and Heroku AppLink are not required for any of the steps in this section.
+This section covers setting up a local development environment to test the quote generation API before deploying to production. You'll create a Salesforce scratch org, start a local Node.js server, and test the API using the provided tools. This allows you to develop and debug locally while maintaining the same Salesforce context and authentication that will be used in production. Note that some Heroku configuration is required but no deployment is needed.
 
 ### Salesforce Setup
 ```bash
