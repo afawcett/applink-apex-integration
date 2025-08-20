@@ -25,7 +25,7 @@ async function extractApexCodeWithPlaywright() {
         }
         
                 // Create output directory and clean it before starting
-        const outputDir = './downloads';
+        const outputDir = 'downloads';
         if (fs.existsSync(outputDir)) {
             const files = fs.readdirSync(outputDir);
             files.forEach(file => {
