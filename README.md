@@ -4,7 +4,7 @@ This project demonstrates a complete Heroku AppLink integration with Salesforce 
 
 ## Overview
 
-This project showcases how to integrate Salesforce with Node.js code running in Heorku using Heroku AppLink, enabling Apex code to securely call Node.js APIs running on Heroku. The integration demonstrates both synchronous and asynchronous processing patterns commonly used in enterprise applications.
+This project showcases how to integrate Salesforce with Node.js code running in Heorku using Heroku AppLink, enabling Apex code to securely call Node.js APIs running on Heroku. The integration demonstrates both synchronous and asynchronous processing patterns commonly used in enterprise applications. You can read more about this in my blog [Improving User Response Time with Heroku AppLink](https://andyinthecloud.com/2025/08/20/improving-user-response-time-with-heroku-applink/).
 
 ## Prerequisites
 
