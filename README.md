@@ -409,6 +409,7 @@ Under the covers Heroku AppLink uses a special "Heroku mode" built into External
 - Source code for configuration/metadata deployed to Salesforce can be found in the `/src.org` directory.
 - Per **Heroku AppLink** documentation, the service mesh buildpack must be installed to enable authenticated connections to be intercepted and passed through to your code.
 - The `/bin/data.sh` script automates the import of sample data into your scratch org. It handles the data import process using the import plan and sample data files in the `data/` directory. This script should be run from the project root directory and will automatically import accounts, opportunities, and related data needed for testing the quote generation functionality.
+- The `/bin/apexstubs.sh` tool extracts dynamically generated Apex classes from the HerokuAppLink integration. It downloads the Apex code with proper formatting and indentation as seen in the Salesforce UI. This is particularly useful for AI coding assistants like Cursor, which can better understand how to create Apex code that uses the generated stubs when they have access to the properly formatted class definitions.
 - For debugging callback issues, you can query the `BackgroundOperation` object to see the status of asynchronous operations and any error messages:
   ```bash
   # Query recent background operations
