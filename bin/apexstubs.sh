@@ -15,13 +15,6 @@ if [ ! -d "$APEXSTUBS_DIR" ]; then
     exit 1
 fi
 
-# Kill any lingering Chrome processes to prevent hanging
-echo "🧹 Cleaning up any lingering Chrome processes..."
-pkill -f "chrome" 2>/dev/null || echo "ℹ️  No Chrome processes found to kill"
-
-# Wait a moment for processes to fully terminate
-sleep 2
-
 # Change to the apexstubs directory
 cd "$APEXSTUBS_DIR"
 
