@@ -1,0 +1,12 @@
+{
+  "packageDirectories": [
+    {
+      "path": "src.org",
+      "default": true
+    }
+  ],
+  "name": "jobstasksapplink",
+  "namespace": "",
+  "sfdcLoginUrl": "https://login.salesforce.com",
+  "sourceApiVersion": "64.0"
+}

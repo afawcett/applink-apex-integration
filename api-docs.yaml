@@ -1,0 +1,158 @@
+openapi: 3.0.1
+info:
+  title: Quote Generation API
+  description: API for generating quotes both synchronously and asynchronously,
+    interacting with Salesforce via AppLink.
+  version: 1.0.0
+components:
+  schemas:
+    CreateQuoteRequest:
+      type: object
+      required:
+        - opportunityId
+      description: Request to generate a quote, includes the opportunity ID to extract
+        product information
+      properties:
+        opportunityId:
+          type: string
+          description: A record Id for the opportunity
+    CreateQuoteResponse:
+      type: object
+      description: Response includes the record Id of the generated quote.
+      properties:
+        quoteId:
+          type: string
+          description: A record Id for the generated quote
+    CreateQuotesRequest:
+      type: object
+      required:
+        - opportunityIds
+      description: Request to generate quotes for multiple opportunities
+      properties:
+        opportunityIds:
+          type: array
+          items:
+            type: string
+          description: Array of opportunity IDs to generate quotes for
+        callbackUrl:
+          type: string
+          description: Callback URL for asynchronous response
+    CreateQuotesResponse:
+      type: object
+      required:
+        - jobId
+      description: Response for batch quote generation - returns job ID for async operation
+      properties:
+        jobId:
+          type: string
+          description: Unique identifier for tracking the background job
+paths:
+  /api/createQuote:
+    post:
+      operationId: createQuote
+      summary: Generate a Quote for a given Opportunity
+      tags:
+        - Pricing Engine
+      description: Calculate pricing and generate an associated Quote.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateQuoteRequest"
+      x-sfdc:
+        heroku:
+          authorization:
+            connectedApp: QuoteServiceConnectedApp
+            permissionSet: QuoteServicePermissions
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateQuoteResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+                    description: Error message when client context is missing or invalid
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+                    description: Error message when an unexpected error occurs
+  /api/createQuotes:
+    post:
+      operationId: createQuotes
+      summary: Submit Batch Quote Generation Job
+      tags:
+        - Pricing Engine
+      description: Calculate pricing and generate quotes from a list of Opportunity IDs.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateQuotesRequest"
+      x-sfdc:
+        heroku:
+          authorization:
+            connectedApp: QuoteServiceConnectedApp
+            permissionSet: QuoteServicePermissions
+      callbacks:
+        createQuotesResponse:
+          "{$request.body#/callbackUrl}":
+            post:
+              description: Callback response with quote creation results
+              operationId: createQuotesResponseCallback
+              requestBody:
+                content:
+                  application/json:
+                    schema:
+                      type: object
+                      properties:
+                        jobId:
+                          type: string
+                        opportunityIds:
+                          type: array
+                          items:
+                            type: string
+                        quoteIds:
+                          type: array
+                          items:
+                            type: string
+                        status:
+                          type: string
+                        errors:
+                          type: array
+                          items:
+                            type: string
+              responses:
+                "200":
+                  description: Callback received successfully
+      responses:
+        "201":
+          description: Quotes created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateQuotesResponse"
+servers:
+  - url: http://localhost:5000
+    description: Local development server
+tags:
+  - name: Pricing Engine
+    description: Quote generation endpoints

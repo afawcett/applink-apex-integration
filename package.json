@@ -1,0 +1,43 @@
+{
+  "name": "quote-generate",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Heroku AppLink app for quote generation (sync and async)",
+  "main": "src/server/index.js",
+  "scripts": {
+    "start": "node src/server/index.js",
+    "dev": "node --watch src/server/index.js",
+    "worker": "node src/server/worker.js",
+    "test": "node --test",
+    "test:watch": "node --test --watch",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "engines": {
+    "node": "20.x"
+  },
+  "packageManager": "pnpm@8.15.4",
+  "dependencies": {
+    "@fastify/formbody": "^7",
+    "@fastify/swagger": "^8.14.0",
+    "@fastify/swagger-ui": "^3.0.0",
+    "@heroku/applink": "^1.0.0-ea.1",
+    "dotenv": "^16.5.0",
+    "fastify": "^4.28.0",
+    "fastify-plugin": "^5.0.1",
+    "ioredis": "^5.6.1",
+    "js-yaml": "^4.1.0",
+    "jsforce": "2.0.0-beta.24",
+    "lodash": "^4.17.21",
+    "pino": "^8.19.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-n": "^16.6.2",
+    "eslint-plugin-promise": "^6.1.1",
+    "prettier": "^3.2.5"
+  }
+}
