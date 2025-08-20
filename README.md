@@ -239,7 +239,37 @@ SUCCESS: createQuotes returned successfully
 
 **Note:** The actual Quote ID and Job ID will be different each time. If you see authentication errors (401), ensure the `QuoteService` permission set is assigned to your user.
 
-## Technical Information
+## Project Structure
+
+This project contains both Salesforce code and Heroku code deployed via the CLI commands above.
+
+```
+applink-apex-integration/
+├── bin/                        # Various tools for data creation and local development
+├── config/
+│   └── project-scratch-def.json
+├── data/
+│   ├── accounts.json
+│   ├── opportunities.json
+│   └── import-plan.json
+├── scripts/                    # Script to test AppLink from Apex
+├── src/                        # Heroku/Node.js source code
+├── src.org/                    # Salesforce source code
+│   └── main/default/
+│       ├── lwc/createQuote/
+│       │   ├── createQuote.js
+│       │   ├── createQuote.html
+│       │   └── createQuote.js-meta.xml
+│       ├── pages/
+│       │   ├── CreateQuotes.page
+│       │   └── CreateQuotes.page-meta.xml
+│       └── objects/Opportunity/
+│           ├── fields/
+│           ├── layouts/
+│           └── listViews/
+├── sfdx-project.json           # Salesforce project configuration
+└── README.md
+```
 
 ## Configuration for Heroku App Async Callbacks
 
@@ -373,8 +403,7 @@ Under the covers Heroku AppLink uses a special "Heroku mode" built into External
 ### Other Notes
 
 - The `api-docs.yaml` file contains OpenAPI schema that defines the API endpoints for quote generation. This schema is required for AppLink integration.
-- The quote generation logic is implemented in the `quote.js` source file, under the `src/server/services` directory.
-- The `api-docs.yaml` file can be downloaded from `http://localhost:5000/docs/yaml` when running locally.
+- The quote generation logic is implemented in the `createQuote.js` and `createQuotes.js` source file, under the `src/server/services` directory.
 - This Node.js implementation uses both synchronous and asynchronous processing through Redis job queues.
 - The [@heroku/salesforce-sdk-nodejs](https://www.npmjs.com/package/@heroku/salesforce-sdk-nodejs) package is used to simplify API communications with the org.
 - Source code for configuration/metadata deployed to Salesforce can be found in the `/src.org` directory.
@@ -418,34 +447,6 @@ The project includes sample data for testing:
 - Different stages (Prospecting, Qualification, Proposal, etc.)
 - Various amounts ($25K - $200K)
 - Different lead sources (Web, Cold Call, Partner Referral)
-
-## Project Structure
-
-```
-jobstasksapplink/
-├── config/
-│   └── project-scratch-def.json
-├── data/
-│   ├── accounts.json
-│   ├── opportunities.json
-│   └── import-plan.json
-├── src.org/                    # Salesforce source code
-│   └── main/default/
-│       ├── lwc/createQuote/
-│       │   ├── createQuote.js
-│       │   ├── createQuote.html
-│       │   └── createQuote.js-meta.xml
-│       ├── pages/
-│       │   ├── CreateQuotes.page
-│       │   └── CreateQuotes.page-meta.xml
-│       └── objects/Opportunity/
-│           ├── fields/
-│           ├── layouts/
-│           └── listViews/
-├── src/                        # Heroku/Node.js source code
-├── sfdx-project.json           # Salesforce project configuration
-└── README.md
-```
 
 ## Troubleshooting
 
