@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ApexStubs Tool Runner
-# Extracts dynamically generated Apex classes from Salesforce HerokuAppLink integration
+# Extracts dynamically generated Apex classes from Salesforce External Services and AppLink integrations
 
 set -e
 
@@ -26,7 +26,28 @@ fi
 
 # Run the Apex code extractor
 echo "🚀 Running ApexStubs tool..."
-npm run extract
-
-echo "✅ ApexStubs tool completed!"
-echo "📁 Downloaded files are in: $APEXSTUBS_DIR/downloads/"
+if npm run extract; then
+    echo "✅ ApexStubs tool completed!"
+    echo "📁 Downloaded files are in: $APEXSTUBS_DIR/downloads/"
+else
+    echo ""
+    echo "❌ ApexStubs tool failed!"
+    echo ""
+    echo "🔑 Authentication Error: SF_PASSWORD environment variable is required for non-scratch orgs."
+    echo ""
+    echo "📋 To resolve this issue, you have two options:"
+    echo ""
+    echo "1️⃣ For Scratch Orgs:"
+    echo "   Run this command to generate a password:"
+    echo "   sf org generate password"
+    echo ""
+    echo "2️⃣ For Non-Scratch Orgs:"
+    echo "   Set the SF_PASSWORD environment variable:"
+    echo "   export SF_PASSWORD='your-org-password'"
+    echo ""
+    echo "   Or run the script with the password inline:"
+    echo "   SF_PASSWORD='your-org-password' ./bin/apexstubs.sh"
+    echo ""
+    echo "📚 For more information, check the README.md file."
+    exit 1
+fi

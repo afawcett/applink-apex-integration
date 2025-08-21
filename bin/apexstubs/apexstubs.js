@@ -101,28 +101,39 @@ async function extractApexCodeWithPlaywright() {
         await page.goto(apexClassesUrl, { waitUntil: 'networkidle', timeout: 25000 });
         await page.waitForTimeout(3000);
         
-        // Extract the list of dynamic Apex classes by scanning for herokuapplink references
+        // Extract the list of dynamic Apex classes by scanning for any dynamic class references
         const classesToDownload = await page.evaluate(() => {
             const allLinks = Array.from(document.querySelectorAll('a'));
-            const herokuClasses = [];
+            const dynamicClasses = [];
             
             allLinks.forEach(link => {
                 const href = link.getAttribute('href');
                 const text = link.textContent.trim();
                 
-                if (href && href.includes('herokuapplink') && text && text.length > 0) {
-                    const match = href.match(/durableId=herokuapplink-([^&]+)/);
+                // Look for any dynamic Apex class links
+                if (href && href.includes('durableId=') && text && text.length > 0) {
+                    // Extract the durableId pattern - look for any dynamic class identifier
+                    const match = href.match(/durableId=([^-]+)-([^&]+)/);
                     if (match) {
-                        herokuClasses.push(match[1]);
+                        const prefix = match[1];
+                        const className = match[2];
+                        // Only include if it looks like a valid dynamic class (not standard Salesforce classes)
+                        if (prefix && className && !['apex', 'standard'].includes(prefix.toLowerCase())) {
+                            dynamicClasses.push({
+                                prefix: prefix,
+                                className: className,
+                                fullId: `${prefix}-${className}`
+                            });
+                        }
                     }
                 }
             });
             
-            return [...new Set(herokuClasses)]; // Remove duplicates
+            return [...new Set(dynamicClasses.map(c => c.fullId))]; // Remove duplicates
         });
         
         if (classesToDownload.length === 0) {
-            throw new Error('No dynamic Apex classes found. Please ensure the HerokuAppLink integration is properly configured.');
+            throw new Error('No dynamic Apex classes found. Please ensure you have External Services or AppLink integrations configured that generate dynamic Apex classes.');
         }
         
         console.log(`📋 Found ${classesToDownload.length} dynamic Apex classes to download`);
@@ -133,8 +144,8 @@ async function extractApexCodeWithPlaywright() {
             const className = classesToDownload[i];
             console.log(`📄 Processing ${i + 1}/${classesToDownload.length}: ${className}`);
             
-            // Construct the URL for this class
-            const classUrl = `${orgUrl}/0xa000000000000?durableId=herokuapplink-${className}`;
+            // Construct the URL for this class - use the full dynamic ID
+            const classUrl = `${orgUrl}/0xa000000000000?durableId=${className}`;
             
             try {
                 // Navigate to the class page using the same authenticated page

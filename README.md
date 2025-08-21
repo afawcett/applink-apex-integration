@@ -409,7 +409,34 @@ Under the covers Heroku AppLink uses a special "Heroku mode" built into External
 - Source code for configuration/metadata deployed to Salesforce can be found in the `/src.org` directory.
 - Per **Heroku AppLink** documentation, the service mesh buildpack must be installed to enable authenticated connections to be intercepted and passed through to your code.
 - The `/bin/data.sh` script automates the import of sample data into your scratch org. It handles the data import process using the import plan and sample data files in the `data/` directory. This script should be run from the project root directory and will automatically import accounts, opportunities, and related data needed for testing the quote generation functionality.
-- The `/bin/apexstubs.sh` tool extracts dynamically generated Apex classes from the HerokuAppLink integration. It downloads the Apex code with proper formatting and indentation as seen in the Salesforce UI. This is particularly useful for AI coding assistants like Cursor, which can better understand how to create Apex code that uses the generated stubs when they have access to the properly formatted class definitions.
+- The `/bin/apexstubs.sh` tool extracts dynamically generated Apex classes from Salesforce External Services and AppLink integrations. It downloads the Apex code with proper formatting and indentation as seen in the Salesforce UI. This is particularly useful for AI coding assistants like Cursor, which can better understand how to create Apex code that uses the generated stubs when they have access to the properly formatted class definitions.
+
+### ApexStubs Tool Usage
+
+The ApexStubs tool extracts dynamically generated Apex classes from any Salesforce External Services or AppLink integration. It requires authentication to access your Salesforce org. You have two options depending on your org type:
+
+#### For Scratch Orgs:
+```bash
+# Generate a password for the scratch org admin user
+sf org generate password
+
+# Then run the ApexStubs tool
+./bin/apexstubs.sh
+```
+
+#### For Non-Scratch Orgs:
+```bash
+# Set the SF_PASSWORD environment variable
+export SF_PASSWORD='your-org-password'
+
+# Then run the ApexStubs tool
+./bin/apexstubs.sh
+
+# Or run with password inline
+SF_PASSWORD='your-org-password' ./bin/apexstubs.sh
+```
+
+**Note:** The tool will automatically handle the authentication and download the dynamically generated Apex classes to the `bin/apexstubs/downloads/` directory.
 - For debugging callback issues, you can query the `BackgroundOperation` object to see the status of asynchronous operations and any error messages:
   ```bash
   # Query recent background operations
