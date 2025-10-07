@@ -1,4 +1,4 @@
-# LWC → Apex → Heroku → Apex → LWC Sequence Diagram
+# LWC → Apex → AppLink → Heroku → Salesforce (Synchronous)
 
 This diagram shows the synchronous flow for creating a single quote using Heroku AppLink.
 

@@ -1,6 +1,6 @@
-# VF → Apex → Heroku → Apex → VF Sequence Diagram
+# VF → Apex → AppLink → Heroku → Worker → Callback (Asynchronous)
 
-This diagram shows the asynchronous flow for creating multiple quotes using Heroku AppLink with callbacks.
+This diagram shows the asynchronous flow for creating multiple quotes using Heroku AppLink with callbacks and Redis-backed worker processing.
 
 ```mermaid
 sequenceDiagram
@@ -56,8 +56,8 @@ sequenceDiagram
     
     Note over Callback: CreateQuotesCallback.createQuotesResponse()
     
-    Callback->>SF: Send custom notification to user
-    SF-->>Callback: Notification sent
+    Callback->>Callback: Send custom notification to user
+    Callback-->>User: Notification delivered
     
     Note over User,SF: User receives notification about job completion
 ```
