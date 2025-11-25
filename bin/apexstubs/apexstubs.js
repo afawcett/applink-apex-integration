@@ -3,6 +3,7 @@
 import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { chromium } from 'playwright';
 
 async function extractApexCodeWithPlaywright() {
@@ -325,7 +326,9 @@ async function extractApexCodeWithPlaywright() {
 }
 
 // Run if called directly
-if (import.meta.url === `file://${process.argv[1]}`) {
+const __filename = fileURLToPath(import.meta.url);
+const isMainModule = process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1]);
+if (isMainModule) {
     // Add global timeout to prevent indefinite hanging
     const globalTimeout = setTimeout(() => {
         console.error('⏰ Global timeout reached - forcing exit');
