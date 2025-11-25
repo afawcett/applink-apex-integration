@@ -54,8 +54,8 @@ async function extractApexCodeWithPlaywright() {
         // Login to Salesforce
         console.log('🔐 Logging in to Salesforce...');
         try {
-            await page.goto('https://test.salesforce.com', { waitUntil: 'networkidle', timeout: 30000 });
-            await page.waitForTimeout(2000);
+            await page.goto('https://test.salesforce.com', { waitUntil: 'networkidle', timeout: 45000 });
+            await page.waitForTimeout(4000);
             
             if (page.isClosed()) {
                 throw new Error('Page was closed unexpectedly');
@@ -75,7 +75,7 @@ async function extractApexCodeWithPlaywright() {
                     await loginButton.click();
                     
                     try {
-                        await page.waitForLoadState('networkidle', { timeout: 30000 });
+                        await page.waitForLoadState('networkidle', { timeout: 45000 });
                     } catch (navError) {
                         if (page.isClosed()) {
                             throw new Error('Page was closed during navigation');
@@ -92,15 +92,15 @@ async function extractApexCodeWithPlaywright() {
             throw error;
         }
         
-        await page.waitForTimeout(3000);
+        await page.waitForTimeout(5000);
         
         // Discover dynamic Apex classes automatically
         console.log('🔍 Discovering dynamic Apex classes...');
         
         // Navigate to the Apex Classes page to find dynamic classes
         const apexClassesUrl = `${orgUrl}/01p?retURL=%2F01p&setupid=ApexClasses`;
-        await page.goto(apexClassesUrl, { waitUntil: 'networkidle', timeout: 25000 });
-        await page.waitForTimeout(3000);
+        await page.goto(apexClassesUrl, { waitUntil: 'networkidle', timeout: 40000 });
+        await page.waitForTimeout(7000);
         
         // Extract the list of dynamic Apex classes by scanning for any dynamic class references
         const classesToDownload = await page.evaluate(() => {
@@ -150,12 +150,12 @@ async function extractApexCodeWithPlaywright() {
             
             try {
                 // Navigate to the class page using the same authenticated page
-                await page.goto(classUrl, { waitUntil: 'networkidle', timeout: 25000 });
-                await page.waitForTimeout(3000);
+                await page.goto(classUrl, { waitUntil: 'networkidle', timeout: 40000 });
+                await page.waitForTimeout(5000);
                 
                 // Wait for the class code to load
                 try {
-                    await page.waitForSelector('.codeBlock', { timeout: 8000 });
+                    await page.waitForSelector('.codeBlock', { timeout: 20000 });
                 } catch (waitError) {
                     // Continue anyway if element not found
                 }
@@ -291,7 +291,7 @@ async function extractApexCodeWithPlaywright() {
             
                             // Small delay between requests
                 if (i < classesToDownload.length - 1) {
-                    await page.waitForTimeout(500);
+                    await page.waitForTimeout(1500);
                 }
         }
         
@@ -333,7 +333,7 @@ if (isMainModule) {
     const globalTimeout = setTimeout(() => {
         console.error('⏰ Global timeout reached - forcing exit');
         process.exit(1);
-    }, 120000); // 2 minutes total timeout
+    }, 240000); // 4 minutes total timeout
     
     extractApexCodeWithPlaywright()
         .then(() => {
